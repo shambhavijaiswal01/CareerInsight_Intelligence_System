@@ -17,8 +17,9 @@ export async function updateUser(data) {
 
   try {
     // 1. Fetch or generate AI insights OUTSIDE of the DB transaction
-    let industryInsight = await db.industryInsight.findUnique({
-      where: { industry: data.industry },
+    // This works because userId IS a unique identifier
+    const insight = await db.industryInsight.findUnique({
+     where: { userId: userId } 
     });
 
     if (!industryInsight) {
