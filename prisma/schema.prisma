@@ -74,7 +74,8 @@ model CoverLetter {
 
 model IndustryInsight {
   id          String @id @default(cuid())
-  industry    String @unique
+  userId      String   @unique // Link to Clerk User ID
+  industry    String 
   users       User[]
 
   salaryRanges Json
