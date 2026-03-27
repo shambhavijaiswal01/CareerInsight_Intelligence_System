@@ -16,17 +16,18 @@ export async function updateUser(data) {
   if (!user) throw new Error("User not found");
 
   try {
-    // 1. Fetch or generate AI insights OUTSIDE of the DB transaction
-    // This works because userId IS a unique identifier
-    const insight = await db.industryInsight.findUnique({
-     where: { userId: userId } 
+    // 1. Check if insights already exist for this USER ID
+    let insight = await db.industryInsight.findUnique({
+      where: { userId: userId },
     });
 
-    if (!industryInsight) {
+    // 2. If no insight exists, generate it
+    if (!insight) {
       const insights = await generateAIInsights(data.industry);
 
-      industryInsight = await db.industryInsight.create({
+      insight = await db.industryInsight.create({
         data: {
+          userId: userId, // CRITICAL: This was missing and is now required
           industry: data.industry,
           ...insights,
           nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -34,7 +35,7 @@ export async function updateUser(data) {
       });
     }
 
-    // 2. Perform the update (no transaction needed for simple one-table update)
+    // 3. Update the user profile
     const updatedUser = await db.user.update({
       where: { id: user.id },
       data: {
@@ -42,7 +43,8 @@ export async function updateUser(data) {
         experience: data.experience,
         bio: data.bio,
         skills: data.skills,
-        industryInsightId: industryInsight.id, // Ensure user is linked to the insight
+        // Link the user to the insight record we found or created
+        industryInsightId: insight.id, 
       },
     });
 
