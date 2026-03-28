@@ -6,16 +6,21 @@ export const runtime = 'nodejs';
 const isPublicRoute = createRouteMatcher([
   "/",
   "/api/inngest(.*)", // Use (.*) to ensure all sub-paths are public
+  "/sign-in(.*)",
+  "/sign-up(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
   // Check if it's a public route FIRST
   if (isPublicRoute(req)) {
     return; // Do nothing, let the request pass
   }
   
   // Otherwise, protect the route
-  await auth.protect();
+  if (!userId) {
+    await auth.protect();
+  }
 });
 
 export const config = {
