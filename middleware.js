@@ -5,6 +5,8 @@ export const runtime = 'nodejs';
 
 const isPublicRoute = createRouteMatcher([
   "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
   "/api/inngest(.*)", // Use (.*) to ensure all sub-paths are public
   "/sign-in(.*)",
   "/sign-up(.*)",
