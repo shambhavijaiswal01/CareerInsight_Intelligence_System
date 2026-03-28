@@ -10,9 +10,7 @@
 ## 🌐 Live Demo
 
 🔗 **Deployed Application:**
-👉 [https://careerinsight-intelligence-system.vercel.app](https://careerinsight-intelligence-system.vercel.app)
-
-> *(Replace this with your actual deployed link if different)*
+👉 https://career-insight-intelligence-system.vercel.app/
 
 ---
 
